@@ -12,11 +12,12 @@ char	*ft_est_regulier(char *str,int len)
 		int	m;
 	} parent[100], *p;
 
+	(void)len;
 	p = parent;
 	ret = buff;
 	n = 0;
 	m = 0;
-	if (len >= ft_strlen(buff) / 2)
+	if (len >= sizeof(buff) / 2)
 		return (NULL);
 	for (; *str; str++)
 	{
@@ -28,10 +29,11 @@ char	*ft_est_regulier(char *str,int len)
 				--m;
 				*ret++ = '.';
 			}
-			if (p >= parent + 100)
+			if (p >= parent+100)
 				return (NULL);
 			p->n = n;
 			p->m = m;
+			p++;
 			n = 0;
 			m = 0;
 			break;
@@ -59,9 +61,9 @@ char	*ft_est_regulier(char *str,int len)
 			case '*':
 			case '+':
 			case '?':
-			if(m == 0)
-				return NULL;
-			*ret++ = *str;
+				if(m == 0)
+					return NULL;
+				*ret++ = *str;
 			break;
 		default:
 			if(m > 1){
