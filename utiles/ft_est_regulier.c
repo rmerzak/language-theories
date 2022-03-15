@@ -3,7 +3,7 @@
 char	*ft_est_regulier(char *str,int len)
 {
 	char		*ret;
-	static char	*buff[8000];
+	char	*buff[8000];
 	int			n;
 	int			m;
 	struct
@@ -17,7 +17,7 @@ char	*ft_est_regulier(char *str,int len)
 	ret = buff;
 	n = 0;
 	m = 0;
-	if (len >= sizeof(buff) / 2)
+	if (strlen(str) >= sizeof(buff) / 2)
 		return (NULL);
 	for (; *str; str++)
 	{
@@ -63,7 +63,7 @@ char	*ft_est_regulier(char *str,int len)
 			case '?':
 				if(m == 0)
 					return NULL;
-				*ret++ = *str;
+					*ret++ = *str;
 			break;
 		default:
 			if(m > 1){

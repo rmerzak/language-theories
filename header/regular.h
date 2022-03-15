@@ -15,6 +15,7 @@ typedef struct state
 } s_state;
 
 int		ft_strlen(char *str);
+char	*ft_est_regulier(char *str,int len);
 
 
 #endif
