@@ -3,7 +3,7 @@
 char	*ft_est_regulier(char *str,int len)
 {
 	char		*ret;
-	char	*buff[8000];
+	static char	buff[8000];
 	int			n;
 	int			m;
 	struct
@@ -19,11 +19,10 @@ char	*ft_est_regulier(char *str,int len)
 	m = 0;
 	if (strlen(str) >= sizeof(buff) / 2)
 		return (NULL);
-	for (; *str; str++)
+	while (*str)
 	{
-		switch (*str)
+		if (*str == '(')
 		{
-		case '(':
 			if (m > 1)
 			{
 				--m;
@@ -36,51 +35,59 @@ char	*ft_est_regulier(char *str,int len)
 			p++;
 			n = 0;
 			m = 0;
-			break;
-		case '|':
+		}
+		else if (*str == '|')
+		{
 			if(m == 0)
 				return (NULL);
 			while (--m)
 				*ret++ = '.';
 			n++;
-			break ;
-		case ')':
+		}
+		else if (*str == ')')
+		{
 			if (p == parent)
 				return (NULL);
 			if (m == 0)
 				return (NULL);
 			while (--m > 0)
 				*ret++ = '.';
-			for (; n > 0; n--)
+			while (n > 0)
+			{
 				*ret++ = '|';
+				n--;
+			}
 			--p;
 			n = p->n;
 			m = p->m;
 			m++;
-			break ;
-			case '*':
-			case '+':
-			case '?':
+		}
+		else if (*str == '*' || *str == '?' || *str == '+')
+		{
 				if(m == 0)
 					return NULL;
 					*ret++ = *str;
-			break;
-		default:
+		}
+		else 
+		{
 			if(m > 1){
 				--m;
 				*ret++ = '.';
 			}
 			*ret++ = *str;
 			m++;
-			break;
 		}
+		str++;
 	}
 	if (p != parent)
 		return (NULL);
 	while (--m > 0)
 		*ret++ = '.';
-	for (; n > 0; n--)
+	while (n > 0)
+	{
 		*ret++ = '|';
+		n--;
+	}
 	*ret = 0;
 	return buff;
 }
