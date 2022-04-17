@@ -1,10 +1,12 @@
-#include "../header/regular.h"
+#include "../header/regulier.h"
 
-void    ft_patch(list *l, s_state *s)
+void ft_patch(Lpoiteur *l, s_state *s)
 {
-    list    *next;
-    for(; l; l=next){
-		next = l->next;
-		l->s = s;
-	}
+    Lpoiteur *next;
+
+    for (; l; l = next)
+    {
+        next = l->next;
+        l->s = s;
+    }
 }

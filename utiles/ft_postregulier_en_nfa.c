@@ -1,69 +1,71 @@
-#include "../header/regular.h"
+#include "../header/regulier.h"
 
+s_state matchstate = {Match};
 
-s_state *ft_postregulier_en_nfa(char *postregulier)
+Frag frag(s_state *start, Ptrlist *out)
 {
-    char        *p;
-    f_fragment  stack[8000], *stackp, e1, e2, e;
-    s_state     *s;
-    if (postregulier == NULL)
-        return (NULL);
-    #define push(s)	*stackp++ = s
-    #define pop()	*--stackp
+    Frag n = {start, out};
+    return n;
+}
+s_state *post2nfa(char *postfix)
+{
+    char *p;
+    Frag stack[1000], *stackp, e1, e2, e;
+    s_state *s;
+
+    if (postfix == NULL)
+        return NULL;
+
+#define push(s) *stackp++ = s
+#define pop() *--stackp
 
     stackp = stack;
-    p = postregulier;
-    while (*p)
+    for (p = postfix; *p; p++)
     {
-        if (*p == '.')
+        switch (*p)
         {
+        default:
+            s = state(*p, NULL, NULL);
+            push(frag(s, list1(&s->out)));
+            break;
+        case '.':
             e2 = pop();
-			e1 = pop();
-			ft_patch(e1.out, e2.start);
-			push(ft_fragment(e1.start, e2.out));
-			break;
-        }
-        else if (*p == '|')
-        {
+            e1 = pop();
+            patch(e1.out, e2.start);
+            push(frag(e1.start, e2.out));
+            break;
+        case '|':
             e2 = pop();
-			e1 = pop();
-			s = ft_state(Split, e1.start, e2.start);
-			push(ft_fragment(s, ft_append(e1.out, e2.out)));
-        }
-        else if (*p == '?')
-        {
+            e1 = pop();
+            s = state(Split, e1.start, e2.start);
+            push(frag(s, append(e1.out, e2.out)));
+            break;
+        case '?':
             e = pop();
-			s = ft_state(Split, e.start, NULL);
-			push(ft_fragment(s, ft_append(e.out, ft_list1(&s->out1))));
-        }
-        else if (*p == '*')
-        {
+            s = state(Split, e.start, NULL);
+            push(frag(s, append(e.out, list1(&s->out1))));
+            break;
+        case '*':
             e = pop();
-			s = ft_state(Split, e.start, NULL);
-			ft_patch(e.out, s);
-			push(ft_fragment(s, ft_list1(&s->out1)));
-        }
-        else if (*p == '+')
-        {
+            s = state(Split, e.start, NULL);
+            patch(e.out, s);
+            push(frag(s, list1(&s->out1)));
+            break;
+        case '+':
             e = pop();
-			s = ft_state(Split, e.start, NULL);
-			ft_patch(e.out, s);
-			push(ft_fragment(e.start, ft_list1(&s->out1)));
+            s = state(Split, e.start, NULL);
+            patch(e.out, s);
+            push(frag(e.start, list1(&s->out1)));
+            break;
         }
-        else
-        {
-            s = ft_state(*p, NULL, NULL);
-			push(ft_fragment(s, ft_list1(&s->out)));
-        }
-        p++;
     }
+
     e = pop();
-    if(stackp != stack)
-		return NULL;
-    	
-   
-	ft_patch(e.out, &matchstate);
-	return e.start;
-    #undef pop
-    #undef push
+    if (stackp != stack)
+        return NULL;
+
+    patch(e.out, &matchstate);
+    return e.start;
+#undef pop
+#undef push
 }

@@ -2,26 +2,29 @@ NAME = expression_regulier
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra
-
 HEADER = regular.h
 
 SRC_FILE = ./main/main.c\
-			./utiles/ft_est_regulier.c\
-			./utiles/ft_strlen.c\
-			./utiles/ft_erreur.c\
+			./utiles/ft_addstate.c\
+			./utiles/ft_aide_list.c\
 			./utiles/ft_append.c\
+			./utiles/ft_debutlist.c\
+			./utiles/ft_debutstate.c\
+			./utiles/ft_dstate.c\
+			./utiles/ft_erreur.c\
+			./utiles/ft_est_regulier.c\
 			./utiles/ft_fragment.c\
-			./utiles/ft_list1.c\
+			./utiles/ft_nextstate.c\
 			./utiles/ft_patch.c\
 			./utiles/ft_state.c\
-			./utiles/ft_postregulier_en_nfa.c\
+			./utiles/ft_step.c\
+
 
 OBJ_FILE = $(SRC_FILE:%.c=%.o)
 
 $(NAME) : $(OBJ_FILE)
 	@echo $(OBJ_FILE)
-	@$(CC) $(CFLAGS)  $(OBJ_FILE) -o $(NAME)
+	@$(CC) $(OBJ_FILE) -o $(NAME)
 
 all : $(NAME)
 

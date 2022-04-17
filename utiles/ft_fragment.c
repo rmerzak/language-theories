@@ -1,7 +1,7 @@
-#include "../header/regular.h"
+#include "../header/regulier.h"
 
-f_fragment  ft_fragment(s_state *debut, list *sortie)
+fragment ft_fragment(s_state *debut, Lpoiteur *sortie)
 {
-    f_fragment  n = {debut , sortie};
-    return (n);
+    fragment n = {debut, sortie};
+    return n;
 }
