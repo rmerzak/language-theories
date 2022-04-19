@@ -1,5 +1,4 @@
 #include "../header/regulier.h"
-
 char *ft_est_regulier(char *str, int len)
 {
     char *ret;
@@ -62,7 +61,7 @@ char *ft_est_regulier(char *str, int len)
             m = p->m;
             m++;
         }
-        else if (*str == '*' || *str == '?' || *str == '+')
+        else if (*str == '*' || *str == '+')
         {
             if (m == 0)
                 return NULL;

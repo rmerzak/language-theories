@@ -4,9 +4,11 @@ void ft_patch(Lpoiteur *l, s_state *s)
 {
     Lpoiteur *next;
 
-    for (; l; l = next)
+    while(l)
     {
         next = l->next;
         l->s = s;
+        l = next;
     }
+    
 }

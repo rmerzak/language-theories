@@ -16,8 +16,8 @@ s_state *ft_postregulier_en_nfa(char *postregulier)
     if (postregulier == NULL)
         return NULL;
 
-#define ft_push(s) *stackbackup++ = s
-#define ft_pop() *--stackbackup
+    #define ft_push(s) *stackbackup++ = s
+    #define ft_pop() *--stackbackup
 
     stackbackup = stack;
     p = postregulier;
@@ -36,12 +36,6 @@ s_state *ft_postregulier_en_nfa(char *postregulier)
             e1 = ft_pop();
             s = ft_state(Split, e1.start, e2.start);
             ft_push(ft_fragment(s, ft_append(e1.out, e2.out)));
-        }
-        else if (*p == '?')
-        {
-            e = ft_pop();
-            s = ft_state(Split, e.start, NULL);
-            ft_push(ft_fragment(s, ft_append(e.out, ft_aide_list(&s->out1))));
         }
         else if (*p == '*')
         {
@@ -84,7 +78,7 @@ int ismatch(List *l)
 }
 
 
-int ft_match(DState *start, char *s)
+int ft_matching(DState *start, char *s)
 {
     DState *d, *next;
     int c, i;
@@ -100,11 +94,22 @@ int ft_match(DState *start, char *s)
     return ismatch(&d->l);
 }
 
+void postorder(s_state *root)
+{
+    if (root == NULL || root->finlist == 1) {
+        return;
+    }
+    printf("finlist: %d\n",root->finlist);
+    printf("c: %c\n",root->c);
+    postorder(root->out1);
+    postorder(root->out);
+}
+
 int main(int argc, char **argv)
 {
     int i;
     char *post;
-    s_state *start;
+    s_state *debut;
 
     if (argc < 3)
         ft_erreur(1,NULL);
@@ -112,13 +117,14 @@ int main(int argc, char **argv)
     if (post == NULL)
         ft_erreur(2, argv[1]);
 
-    start = ft_postregulier_en_nfa(post);
-    if (start == NULL)
+    debut = ft_postregulier_en_nfa(post);
+    //postorder(start);
+    if (debut == NULL)
         ft_erreur(3, post);
     l1.s = malloc(nstate * sizeof l1.s[0]);
     l2.s = malloc(nstate * sizeof l2.s[0]);
     for (i = 2; i < argc; i++) {
-        if (ft_match(ft_debutstate(start), argv[i]))
+        if (ft_matching(ft_debutstate(debut), argv[i]))
             printf("ce mot \"%s\" appartient a expression regulier: %s\n", argv[i],argv[1]);
         else
             printf("ce mot \"%s\" n'appartient pas a expression regulier: %s\n", argv[i], argv[1]);
